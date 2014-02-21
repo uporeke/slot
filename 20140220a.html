@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<title>slot machine</title>
+	<style>
+	.col{
+		float: left;
+		width: 100px;
+		text-align: center;
+		font-size: 32px;
+		}
+	</style>
+</head>
+
+<body>
+<h1>SLOT MACHINE</h1>
+	<div class="col">
+		<span id="num0">？</span><br>
+		<input type="button" value="STOP!" onclick="stopSlot(0);">
+	</div>
+
+	<div class="col">
+		<span id="num1">？</span><br>
+		<input type="button" value="STOP!" onclick="stopSlot(1);">
+	</div>
+
+	<div class="col">
+		<span id="num2">？</span><br>
+		<input type="button" value="STOP!" onclick="stopSlot(2);">
+	</div>
+	
+	<script>
+	var timers,
+		nums,　//結果の数値
+		stopCount; //今何番目を止めているか
+	
+	function startSlot(){ //配列として宣言
+		timers = [];
+		nums = [];
+		stopCount = 0;
+		
+		runSlot(0);
+		runSlot(1);
+		runSlot(2);
+	}
+
+	
+	function checkSlot(){ //いくつ揃ったかを判定する
+		//alert("check");
+		nums.sort(); //1番目と2番めを比較
+		console.log(nums);
+		
+		if(nums[0] == nums[1] && nums[1] == nums[2]){
+			alert('This is JACKPOT!!! A W E S O M E ! ! !');
+		} else if(nums[0] == nums[1] || nums[1] == nums[2]){ //ソートしているので、|| nums[0] == nums[2]は不要
+			alert('Reach!');
+		} else {
+			alert('NOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!');
+		}
+	}
+	
+//スロットを回す処理（自動）
+	function runSlot(n){
+		document.getElementById('num' + n).innerHTML = Math.floor(Math.random() * 10); //同じ処理を繰り返す時は+iで考える。ここで数字を回転させている。
+		timers[n] = setTimeout(function(){ //setTimeout()は設定時間後に関数を呼び出す命令文で、 それ自体では繰り返しは起こりません
+			runSlot(n);
+		}, 500); //
+	};
+	
+	startSlot();
+
+//スロットを止める処理
+	function stopSlot(n){
+//numsに値が入っていなかったらストップ、値が既に入っていたら処理しない設定
+		//if(nums[n] != undefined){ //numsが決まっている場合（nに0から2が入っている場合）,undefinedは変数にできてしまうので、この書き方はよくない
+		if(typeof nums[n] !== 'undefined'){ 　//undefined値にtypeof演算子を作用させると必ず"undefined"という文字列が返るため、それと比較することで判定
+			return; //return文を使うことで何らかの値を1つだけ戻すことができますので、複雑な計算を行って結果を返すような関数を作ることが可能になります。
+		}
+		clearTimeout(timers[n]); //一定時間後に処理を開始する「setTimeout」メソッドの処理を停止する
+		nums[n] = document.getElementById('num' + n).innerHTML; //num+nの値をnums[n]にhtmlとして書き換える
+		stopCount++; //1つ先へ
+		
+		if(stopCount == 3){
+			checkSlot();
+		}
+	}
+	
+	</script>
+</body>
+</html>
