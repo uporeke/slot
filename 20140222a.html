@@ -27,12 +27,19 @@
 	<script>
 	
 		var startTime,
+			stopTime, //最初に変数定義していなかったので、if(!startTime)でひっかかった
 			timerId; //タイマーを回すときのID
 		
 		function run(){
-			startTime = (new Date()).getTime(); //現在の日付オブジェクトを取得（getTimeで経過ミリ秒）
-			timer();
+			if(stopTime){ //stopTimeが定義されていない場合
+				startTime = startTime + (new Date()).getTime() - stopTime;
+			}
 			
+			if(!startTime){
+				startTime = (new Date()).getTime(); //現在の日付オブジェクトを取得（getTimeで経過ミリ秒）
+			}
+			
+			timer();
 		}
 		
 		function timer(){ //現在時刻（startTime）から経過秒を引いたものを表示
@@ -44,6 +51,7 @@
 		
 		function stop(){
 			clearTimeout(timerId); //setTimeoutとclearTimeoutは1セット
+			stopTime = (new Date()).getTime(); //stopTimeを設定したら、runの設定にif文でつなげる
 		}
 		
 		function reset(){
