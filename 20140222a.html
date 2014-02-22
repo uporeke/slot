@@ -43,10 +43,12 @@
 		}
 		
 		function stop(){
-			
+			clearTimeout(timerId); //setTimeoutとclearTimeoutは1セット
 		}
+		
 		function reset(){
-			
+			startTime = undefined;
+			document.getElementById('sec').innerHTML = '0.00';	
 		}
 	</script>
 </body>
